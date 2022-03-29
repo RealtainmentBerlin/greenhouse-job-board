@@ -11,6 +11,10 @@
  * @subpackage Greenhouse_Job_Board/public/partials
  */
 
+require __DIR__ . '/../../vendor/autoload.php';
+
+use \Greenhouse\GreenhouseToolsPhp\GreenhouseService;
+
 require_once '../../../../../wp-load.php';
 $options = get_option( 'greenhouse_job_board_settings' );
 
@@ -97,11 +101,14 @@ if ( $ghjb_e &&
 	// check each question that's required and make sure it's included in the post object.
 	foreach ( $job_json->questions as $question ) {
 		if ( $question->required ) {
-			if ( ! isset( $_POST[ $question->fields[0]->name ] ) ) {
+			if ( ! isset( $_POST[ str_replace('[]', '', $question->fields[0]->name) ] ) ) {
 				$errors[] = $question->fields[0]->name;
 			}
 		}
 	}
+	error_log("-------\n", 3, dirname( __FILE__ ) . '/errors.log');
+	error_log(var_export($_POST, true), 3, dirname( __FILE__ ) . '/errors.log');
+	error_log("-------\n", 3, dirname( __FILE__ ) . '/errors.log');
 	// if any errors print to log.
 	if ( count( $errors ) > 0 ) {
 		// ERROR - required fields missing.
@@ -119,48 +126,16 @@ if ( $ghjb_e &&
 	}
 }
 
-/**
- * CURL stuff
- * I know, fun, right?!
- * 
- * rebuild with wp_remote_post in the future as long as we can still attach files.
- * https://stackoverflow.com/questions/46345259/using-wp-remote-post-to-post-multipart-form-data-with-image-to-inaturalist-res perhaps?
- */
-$url    = 'https://' . $options['greenhouse_job_board_api_key'] . ':@api.greenhouse.io/v1/applications/';
-$header = array( 'Content-Type: multipart/form-data' );
-$ch     = curl_init();
-curl_setopt( $ch, CURLOPT_URL, $url );
-curl_setopt( $ch, CURLOPT_HTTPHEADER, $header );
-curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-curl_setopt( $ch, CURLOPT_POST, 1 );
-curl_setopt( $ch, CURLOPT_POSTFIELDS, $_POST );
-curl_setopt( $ch, CURLOPT_HEADER, false );
-curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, true );
-curl_setopt( $ch, CURLOPT_UNRESTRICTED_AUTH, 1 );
-$response = curl_exec( $ch );
+$greenhouseService = new GreenhouseService([
+	'apiKey' => $options['greenhouse_job_board_api_key'],
+	'boardToken' => $options['greenhouse_job_board_url_token'],
+]);
 
-if ( $ghjb_d ) {
-	print_r( $_POST );
-	print_r( $response );
-
-	// versions.
-	echo '
-	php version: ' . esc_attr( phpversion() );
-	$curl_v = curl_version();
-	echo '
-	curl version: ' . esc_attr( $curl_v['version'] );
-
-	if ( ! $response ) {
-		echo '
-	    curl error: ' . esc_attr( curl_error( $ch ) );
-		echo '
-		-end error-
-		';
-		print_r( $ch );
-		echo '
-		curl error num: ' . esc_attr( curl_errno( $ch ) );
-		$info = curl_getinfo( $ch );
-	}
+$appService = $greenhouseService->getApplicationApiService();
+try {
+	$application = $appService->postApplication($_POST);
+} catch (GreenhouseAPIResponseException $e) {
+	print_r($e);
+} catch (GreenhouseApplicationException $e) {
+	print_r($e);
 }
-
-curl_close( $ch );

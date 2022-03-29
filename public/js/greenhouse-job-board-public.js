@@ -3,7 +3,7 @@
  */
  jQuery(document).ready(function($) {
 	'use strict';
-	
+
 	if ( $('.greenhouse-job-board').length ){
 		if (ghjb_d) { console.log('Greenhouse job board shortcode activated.'); }
 		// if (ghjb_d) { console.log('job board loading', ghjb_json); }
@@ -14,13 +14,13 @@
 		if (ghjb_d) { console.log('no job board data found'); }
 	}
 
-	 
+
 	$('.greenhouse-job-board[data-type="accordion"] .jobs').on('click', '.job_read_full', function(e){
 		e.preventDefault();
 		//get ghjb id
 		var this_id = '#' + $(this).parents('.greenhouse-job-board').attr('id');
 		if (ghjb_d) { console.log(this_id); }
-		
+
 		var job_id = $(this).parents('.job').data('id');
 		if ( $(this).hasClass('open') ) {
 			$(this).removeClass('open');
@@ -35,8 +35,8 @@
 			$(this_id + ' .job_description_' + job_id).addClass('open');
 		}
 	});
-	
-	
+
+
 	$('.greenhouse-job-board').on('click', '.job_apply', function(e){
 		//get ghjb id
 		var this_id = '#' + $(this).parents('.greenhouse-job-board').attr('id');
@@ -45,21 +45,21 @@
 		if (ghjb_d) { console.log('apply', this_id, jobid); }
 		if (ghjb_a) ghjb_analytics('job', 'apply_form', jobid );
 
-		
+
 		e.preventDefault();
-		
+
 		//accordion
 		if ( $(this_id).data('type') === 'accordion' ) {
-			
+
 			//accordion & iframe
 			if ( $(this_id).data('form_type') === 'iframe') {
-				
+
 				//closing since already open
 				if ( $(this).hasClass('open') ) {
 					$(this).text( $(this).data('closed-text') );
 					$(this).removeClass('open');
 					if ($(this_id + ' #grnhse_app').hasClass('open')) {
-						$(this_id + ' #grnhse_app').empty(); 
+						$(this_id + ' #grnhse_app').empty();
 						$(this_id + ' #grnhse_app').removeClass('open');
 					}
 				}
@@ -67,18 +67,18 @@
 					$(this_id + ' .job_apply').removeClass('open');
 					$(this_id + ' .job_apply').text( $(this).data('closed-text') );
 					if ( $(this_id + ' #grnhse_app').hasClass('open') ) {
-						$(this_id + ' #grnhse_app').empty(); 
+						$(this_id + ' #grnhse_app').empty();
 						$(this_id + ' #grnhse_app').removeClass('open');
 					}
 					//open this one
 					$(this).addClass('open');
 					$(this).text( $(this).data('opened-text') );
 
-					$(this).parent().append( $(this_id + ' #grnhse_app') ); 
+					$(this).parent().append( $(this_id + ' #grnhse_app') );
 					$(this_id + ' #grnhse_app').addClass('open');
-					
+
 				 	if (ghjb_d) { console.log('loading iframe for job:', jobid); }
-				 	// Loads job with ID 5555555 with a source tracking token taken 
+				 	// Loads job with ID 5555555 with a source tracking token taken
 				 	// from the gh_src querystring parameter. NOTE: this is what you
 				 	// want to do to ensure source tracking works (i.e., tracking
 				 	// where a candidate came from)
@@ -93,11 +93,11 @@
 				 	// Loads the job board (not a specific application)
 				 	// Grnhse.Iframe.load();	 });
 				}
-					
+
 			}
 		//accordion & inline
 			if ( $(this_id).data('form_type') === 'inline') {
-				
+
 				//closing since already open
 				if ( $(this).hasClass('open') ) {
 					$(this).text( $(this).data('closed-text') );
@@ -120,21 +120,21 @@
 					$(this_id + ' .apply_jobs').addClass('open');
 					$(this_id + ' .apply_jobs').toggle(true);
 					$(this).text( $(this).data('opened-text') );
-					
+
 					//move form to this job in the DOM
 					$(this_id + ' .apply_jobs').insertAfter( $(this).parents('.job') );
-					
+
 					// if (ghjb_d) { console.log(jobid); }
 					update_form_per_position(null, jobid, this_id);
-					
-				}		
+
+				}
 			}
 		//end accordion
 		}
-		
+
 		//cycle
 		else if ( $(this_id).data('type') === 'cycle' ) {
-			
+
 			// cycle & iframe
 			if ( $(this_id).data('form_type') === 'iframe' ) {
 				//closing since already open
@@ -142,7 +142,7 @@
 					$(this).text( $(this).data('closed-text') );
 					$(this).removeClass('open');
 					if ($(this_id + ' #grnhse_app').hasClass('open')) {
-						$(this_id + ' #grnhse_app').empty(); 
+						$(this_id + ' #grnhse_app').empty();
 						$(this_id + ' #grnhse_app').removeClass('open');
 					}
 				}
@@ -150,26 +150,26 @@
 					$(this_id + ' .job_apply').removeClass('open');
 					$(this_id + ' .job_apply').text( $(this).data('closed-text') );
 					if ($(this_id + ' #grnhse_app').hasClass('open')) {
-						$(this_id + ' #grnhse_app').empty(); 
+						$(this_id + ' #grnhse_app').empty();
 						$(this_id + ' #grnhse_app').removeClass('open');
 					}
 					//open this one
 					$(this).addClass('open');
 					$(this).text( $(this).data('opened-text') );
 
-					$(this).parent().append( $('#grnhse_app') ); 
+					$(this).parent().append( $('#grnhse_app') );
 					$(this_id + ' #grnhse_app').addClass('open');
 					var jid = $(this).parents('.job').data('id');
 				 	// if (ghjb_d) { console.log(jid); }
-				 	// Loads job with ID 5555555 with a source tracking token taken 
+				 	// Loads job with ID 5555555 with a source tracking token taken
 				 	// from the gh_src querystring parameter. NOTE: this is what you
 				 	// want to do to ensure source tracking works (i.e., tracking
 				 	// where a candidate came from)
 				 	// Grnhse.Iframe.load(jid, 'abc123');
-				 	
+
 				 	// stop default page scrolling behavior
 				 	Grnhse.Settings['scrollOnLoad'] = false;
-				 	
+
 				 	// Loads job with ID 5555555 with no source tracking token
 				 	Grnhse.Iframe.load(jid);
 
@@ -179,22 +179,22 @@
 				//reset height of container to contain the iframe
 				setTimeout( reset_cycle_container_height, 1000, this_id);
 			}
-			
+
 			//cycle & inline
 			else if ( $(this_id).data('form_type') === 'inline' ) {
-				
+
 				//pre select positions select
 				var jobid = $(this).parents('.job').data('id');
 				// if (ghjb_d) { console.log(jobid); }
 				update_form_per_position(null, jobid, this_id);
-				
+
 				$(this_id + '[data-type="cycle"] .all_jobs').cycle('goto', 1 );
 				jobs_scroll_top(this);
 			}
-			
-		//end cycle	
+
+		//end cycle
 		}
-		
+
 	});
 
 	function reset_cycle_container_height(this_id){
@@ -222,13 +222,13 @@
 			$('.apply_ty').show();
 			$('.apply_error').hide();
 		}
-		
+
 		//cycle
 		if ( $(this_id).data('type') === 'cycle' ) {
 			$(this_id + '[data-type="cycle"] .all_jobs').cycle('goto', 2 );
 			jobs_scroll_top(formid);
 		}
-		
+
 		//accordion
 		else if ( $(this_id).data('type') === 'accordion' ) {
 			//hide form, display ty message in place
@@ -237,7 +237,7 @@
 		}
 
 
-		if (typeof ghjb_after_thanks == 'function') { 
+		if (typeof ghjb_after_thanks == 'function') {
 			//if so use it
 			ghjb_after_thanks( formid, textStatus, jobid );
 		}
@@ -249,7 +249,7 @@
 			return o.id == jobid;
 		});
 		var job_questions = this_job[0].questions;
-		
+
 		//get form_fields from settings
 		var form_fields = $('.jobs').attr('data-form_fields');
 		if ( typeof form_fields !== typeof undefined && form_fields !== false ) {
@@ -258,34 +258,34 @@
 		else {
 			form_fields = ['*'];
 		}
-				
+
 		$(jbid + " #apply_form *").remove();
-		
+
 		$(jbid + " #apply_form").append('<h2>' + this_job[0].title + '</h2>');
-		
+
 		var hidden_field = "<input type='hidden' id='hidden_id' name='id' value='" + jobid + "' />";
 		$(jbid + " #apply_form").append(hidden_field);
 		hidden_field = "<input type='hidden' id='hidden_mapped_url_token' name='mapped_url_token' value='" + this_job[0].absolute_url + "' />";
 		$(jbid + " #apply_form").append(hidden_field);
 
-		//filter for customizing job questions 
+		//filter for customizing job questions
 		//check if custom filter function exists
-		if (typeof ghjb_questions_filter == 'function') { 
+		if (typeof ghjb_questions_filter == 'function') {
 			//if so use it
 			job_questions = ghjb_questions_filter( job_questions );
 		}
-		
+
 		if (ghjb_d) { console.log( job_questions ); }
 
 		for ( var i = 0; i < job_questions.length; i++){
-			
+
 			//check that the field is listed if form fields are specified
-			// if (ghjb_d) { console.log(form_fields, job_questions[i].fields[0].name, job_questions[i].label); }
+			if (ghjb_d) { console.log(form_fields, job_questions[i].fields[0].name, job_questions[i].label); }
 
 			if ( form_fields[0] === '*' ||
 				 jQuery.inArray( job_questions[i].fields[0].name, form_fields ) >= 0 ||
 				 jQuery.inArray( job_questions[i].label, form_fields ) >= 0  ) {
-				
+
 				var field_wrap = "<div class='field_wrap field_" + job_questions[i].fields[0].name ;
 				field_wrap += ' field_' + job_questions[i].fields[0].type;
 				var required = '';
@@ -299,7 +299,7 @@
 				if ( job_questions[i].fields[0].type === 'hidden' ) {
 					hidden = true;
 				}
-				
+
 				field_wrap += "' >";
 				//write label for field
 				if ( !hidden ) { //but only if not hidden field
@@ -331,7 +331,7 @@
 				else if ( job_questions[i].fields[0].type === 'multi_value_multi_select' ) {
 					simple_field = false;
 					// field_wrap += "<select name='" + job_questions[i].fields[0].name + "' id='" + job_questions[i].fields[0].name + "' title='" + job_questions[i].label  + "' " + required;
-					// field_wrap += "<div class='checkboxes' " + required;
+					field_wrap += "<div class='checkboxes' " + required;
 				}
 				else {
 					field_wrap += "<input type='" + job_questions[i].fields[0].type + "' name='" + job_questions[i].fields[0].name + "' id='" + job_questions[i].fields[0].name + "' title='" + job_questions[i].label  + "' " + required;
@@ -345,17 +345,17 @@
 					//select
 				if ( !simple_field ) {
 					if ( job_questions[i].fields[0].type === 'multi_value_multi_select' ) {
-						// field_wrap += ' multiple ';
-						
-						// field_wrap += '>';
+						field_wrap += ' multiple ';
+
+						field_wrap += '>';
 						for (var j=0; j < job_questions[i].fields[0].values.length; j++){
-						// 	field_wrap += '<label>';
-						// 	field_wrap += "<input type='checkbox' value='"+job_questions[i].fields[0].values[j].value+"' name='" + job_questions[i].fields[0].name + "' >";
-						// 	field_wrap += job_questions[i].fields[0].values[j].label + '</label><br/>';
+						 	field_wrap += '<label>';
+						 	field_wrap += "<input type='checkbox' value='"+job_questions[i].fields[0].values[j].value+"' name='" + job_questions[i].fields[0].name + "' >";
+						 	field_wrap += job_questions[i].fields[0].values[j].label + '</label><br/>';
 							// field_wrap += "<option value='"+job_questions[i].fields[0].values[j].value+"'>"+job_questions[i].fields[0].values[j].label+"</option>";
 						}
-						// field_wrap += '</div></div>';
-						// field_wrap += "</select></div>";
+						field_wrap += '</div></div>';
+						//field_wrap += "</select></div>";
 
 					}
 					else if ( job_questions[i].fields[0].type === 'multi_value_single_select' ) {
@@ -366,35 +366,35 @@
 						field_wrap += "</select></div>";
 					}
 				}
-				// back to simple fields 
+				// back to simple fields
 				else {
 					field_wrap += " />";
 				}
 				$(jbid + " #apply_form").append(field_wrap);
 			}
-			
+
 		}
-		
-		var submit_button = "<div class='field_wrap field_submit'><input type='button' class='submit button' value='Submit Application' /></div></div>";
-		
+
+		var submit_button = "<div class='field_wrap field_submit'><input type='button' class='submit button' value='Jetzt bewerben' /></div></div>";
+
 		$(jbid + " #apply_form").append(submit_button);
 
 		//hook for after apply form loaded
 		//check if custom filter function exists
-		if (typeof ghjb_apply_form_loaded == 'function') { 
+		if (typeof ghjb_apply_form_loaded == 'function') {
 			//if so, call it
 			ghjb_apply_form_loaded(true);
 		}
 	}
-	
+
 	function jobs_scroll_top(this_caller){
 		//get ghjb id
 		var this_id = '#' + $(this_caller).parents('.greenhouse-job-board').attr('id');
 		// if (ghjb_d) { console.log(this_id); }
-		
+
 		//scroll to top of section
 		$('html, body').animate({
-        	scrollTop: $(this_id).offset().top 
+        	scrollTop: $(this_id).offset().top
 	    }, 500);
 	}
 
@@ -438,9 +438,9 @@
 				$(this).hide();
 			}
 		});
-	
+
 	}
-	
+
 	// interactive departments filter
 	$('.all_jobs').on('change focus blur', '#interactive_filter_departments', function(){
 		var scope = '#' + $(this).parents('.greenhouse-job-board').attr('id') + ' ';
@@ -457,20 +457,20 @@
 		e.preventDefault();
 		//get ghjb id
 		var this_id = '#' + $(this).parents('.greenhouse-job-board').attr('id');
-		
+
 		//find correct slide by data-id
 		var jobid = parseInt( $(this).parents('.job').data('id') );
 		if (ghjb_d) { console.log('navigating to job', jobid); }
 		if (ghjb_a) { ghjb_analytics('job', 'click', jobid ); }
-		
+
 		var slideindex = $('.cycle-slide[data-id="' + jobid + '"]').index();
-		
+
 		jobs_scroll_top(this);
 		$(this_id + '[data-type="cycle"] .all_jobs').cycle('goto', slideindex );
 
-		
+
 	});
-	
+
 	$('.all_jobs').on('click', '.return', function(e){
 		e.preventDefault();
 		//get ghjb id
@@ -485,7 +485,7 @@
 		$(this_id + '[data-type="cycle"] .all_jobs').cycle('goto', 0 );
 		jobs_scroll_top(this);
 	});
-	
+
 	function hasHtml5Validation () {
 	  return typeof document.createElement('input').checkValidity === 'function';
 	}
@@ -499,7 +499,7 @@
 		if (ghjb_a) { ghjb_analytics('job', 'apply_submit', jobid ); }
 
 		var form_id = this_id + ' #apply_form';
-		
+
 		if ( hasHtml5Validation() ) {
 			//if not valid don't submit
 			if ( !$(form_id)[0].checkValidity() ) {
@@ -507,7 +507,7 @@
 				e.preventDefault();
 				$(form_id).addClass('invalid');
 				// is there any custom validation fail function?
-				if (typeof ghjb_form_validate_fail == 'function') { 
+				if (typeof ghjb_form_validate_fail == 'function') {
 					//if so, call it and pass in the form_id
 					ghjb_form_validate_fail(form_id);
 				}
@@ -517,7 +517,7 @@
 				if (ghjb_d) { console.log('validates, submitting form'); }
 				ajax_submit( form_id, null);
 			}
-			
+
 		}
 
 		return false;
@@ -531,7 +531,8 @@
 			ajaxing = true;
 			$(formid).find('.submit').attr('disabled', 'disabled');
 
-			var formData = new FormData( $(formid)[0]);
+			let formData = new FormData($(formid)[0]);
+			if (ghjb_d) { console.log('pre-ajax, submitting formData:', formData); }
 			$.ajax({
 			    type: $(formid).attr('method'),
 			    url: $(formid).attr('action'),
@@ -541,7 +542,7 @@
 		        contentType: false,
 		        processData: false,
 		        enctype: 'multipart/form-data',
-		        mimeType: 'multipart/form-data', 
+		        mimeType: 'multipart/form-data',
 		        formid: formid,
 			    success: function(data, textStatus, jqXHR) {
 			    	if (ghjb_d) { console.log('success', textStatus, data, jqXHR, this.formid); }
@@ -565,7 +566,7 @@
 		}
 		return false;
 	}
-	
+
 });
 
 function decodeHtml(html){
@@ -592,16 +593,16 @@ function strip_tags(input, allowed) {
 
 function get_excerpt_from_content(content, limit){
 	limit = typeof limit !== 'undefined' ? limit : 120;
-	
+
 	//decode
 	var this_content = decodeHtml(content);
 	//strip tags
 	this_content = strip_tags(this_content);
-	
-	//filter for customizing excerpt 
+
+	//filter for customizing excerpt
 	//check if custom filter function exists
 	// since v2.2.0
-	if (typeof ghjb_excerpt_filter == 'function') { 
+	if (typeof ghjb_excerpt_filter == 'function') {
 		//if so use it
 		content = ghjb_excerpt_filter( content );
 	} else {
@@ -610,16 +611,16 @@ function get_excerpt_from_content(content, limit){
 		//start at 0
 		var short_content_start = 0;
 		var content_length = this_content.length;
-		
+
 		//get the full content if total length is less than the limit
 		if ( content_length <= limit) {
 			short_content_end = content_length;
 		}
 		else {
-			//get the first full sentence 
+			//get the first full sentence
 			var short_content_end = this_content.indexOf(".", short_content_start);
 		}
-		
+
 		var short_content = this_content.slice(short_content_start, short_content_end + 1);
 		if (short_content_start < 0){
 			short_content = this_content.slice(0, short_content_end + 1);
@@ -627,7 +628,7 @@ function get_excerpt_from_content(content, limit){
 
 		content = short_content;
 	}
-	
+
 	return content;
 }
 
@@ -642,28 +643,28 @@ function slugme(slugit) {
 
 /**
  * Main greenhouse job board callback.
- * 
+ *
  * This function creates the job board based on all settings.
- * 
+ *
  * @param {*} json JSON data from greenhouse api.
  * @param {*} jbid job board id - to scope any code to this board only.
  */
 function greenhouse_jobs(json, jbid){
  	if (ghjb_d) { console.log(json); }
  	if (ghjb_d) { console.log(jbid); }
- 	
+
  	var board_type = jQuery(jbid).data('type');
- 	
+
  	//setup handlebars
  	var job_html, job_html_template, slide_html, slide_html_template;
  	job_html = jQuery("#job-template").html();
  	job_html_template = Handlebars.compile(job_html);
- 	
+
  	if (board_type == 'cycle' ) {
  		slide_html = jQuery("#job-slide-template").html();
 	 	slide_html_template = Handlebars.compile(slide_html);
  	}
- 	
+
  	//sorting defaults
  	var orderby = 'none';
  	var sort_order = 1; //desc. asc = -1
@@ -682,15 +683,15 @@ function greenhouse_jobs(json, jbid){
  	//sort this sucker
 	json.jobs.sort(function(a, b){
 		if ( sticky[0] == 'bottom' ) {
-			if ( sticky[1] == a.id ) return 1;	
+			if ( sticky[1] == a.id ) return 1;
 			if ( sticky[1] == b.id ) return -1;
 		}
-		
+
 		if ( sticky[0] == 'top' ) {
-			if ( sticky[1] == a.id ) return -1;	
+			if ( sticky[1] == a.id ) return -1;
 			if ( sticky[1] == b.id ) return 1;
 		}
-		
+
 		//sort depending on orderby value
 		if ( orderby === 'title' ) {
 			if ( a.title < b.title ) return -1 * sort_order;
@@ -713,13 +714,13 @@ function greenhouse_jobs(json, jbid){
 		} else if ( orderby === 'random' ) {
 			return Math.round( Math.random() ) - 0.5;
 		}
-		
-		
+
+
 		//do nothing
 		return 0;
 	});
 
- 	
+
  	//grouping
  	//grouping defaults
  	var group = '';
@@ -744,11 +745,11 @@ function greenhouse_jobs(json, jbid){
 		} else if ( group === 'location' ) {
 			if ( a.location.name < b.location.name ) return -1;
 			if ( a.location.name > b.location.name ) return 1;
-		}		
+		}
 		//do nothing
 		return 0;
 	});
-	
+
 
 
 	/**
@@ -773,11 +774,11 @@ function greenhouse_jobs(json, jbid){
 				}
 				if ( unique ) {
 					all_departments.push( this_department );
-				}	
+				}
 			}
 			// console.log(all_departments);
 		}
-		
+
 		//output a select list of departments
 		var departments_select = '<select id="interactive_filter_departments"><option value="*">All Departments</option>';
 		for ( var k = 0; k < all_departments.length; k++) {
@@ -786,7 +787,7 @@ function greenhouse_jobs(json, jbid){
 		departments_select += '</select>';
 		jQuery(jbid + ' .jobs').append(departments_select);
 	}
-	
+
 	/**
 	 * Locations - interactive filter
 	 */
@@ -808,10 +809,10 @@ function greenhouse_jobs(json, jbid){
 			}
 			if ( unique ) {
 				all_locations.push( this_location );
-			}	
+			}
 			// console.log(all_locations);
 		}
-		
+
 		//output a select list of locations
 		var locations_select = '<select id="interactive_filter_locations"><option value="*">All Locations</option>';
 		for ( var k = 0; k < all_locations.length; k++) {
@@ -820,15 +821,15 @@ function greenhouse_jobs(json, jbid){
 		locations_select += '</select>';
 		jQuery(jbid + ' .jobs').append(locations_select);
 	}
-	
+
  	var current_group = this_group = '';
  	//list all jobs
     for (var i = 0; i < json.jobs.length; i++){
      	// if (ghjb_d) { console.log( json.jobs[i].id); }
-     	
+
      	//hide_forms val
      	var hide_forms = jQuery(jbid + ' .jobs').attr('data-hide_forms');
-     	
+
      	//filter pass values
      	var department_filter_pass = true;
      	var department_filter_exclude = false;
@@ -838,9 +839,9 @@ function greenhouse_jobs(json, jbid){
      	var office_filter_exclude = false;
      	var location_filter_pass = true;
      	var location_filter_exclude = false;
-     	
+
      	//////////
-     	// Department Filter - can a single job have multiple departments? 
+     	// Department Filter - can a single job have multiple departments?
      	//
      	var department_filter = false;
      	if ( jQuery(jbid + ' .jobs').attr('data-department_filter') ) {
@@ -873,8 +874,8 @@ function greenhouse_jobs(json, jbid){
 	     		console.log(json.jobs[i].title, 'job. department filter:', department_filter, '. display =', department_filter_pass);
 	     	}
      	}
-     	
-     	    	
+
+
     	//////////
     	// Office Filter - can a single job have multiple offices YES
     	//
@@ -886,7 +887,7 @@ function greenhouse_jobs(json, jbid){
     			office_filter_exclude = true;
     		}
     		office_filter_pass = false;
-    	
+
 	    	//read job office(s) and test against filter
 	    	for( var j = 0; j < json.jobs[i].offices.length; j++ ) {
 	    		//if not excluding check if office matches any office filter
@@ -904,10 +905,10 @@ function greenhouse_jobs(json, jbid){
 	    	}
 	    	// if (ghjb_d) { console.log('office filter:', office_filter, 'pass=', office_filter_pass); }
      	}
-     	
-     	    	
+
+
     	//////////
-    	// Location Filter - can a single job have multiple locations. NO. 
+    	// Location Filter - can a single job have multiple locations. NO.
     	// Location is a text field. Must be an exact match.
     	var location_filter = false;
     	if ( jQuery(jbid + ' .jobs').attr('data-location_filter') ) {
@@ -917,7 +918,7 @@ function greenhouse_jobs(json, jbid){
     			location_filter_exclude = true;
     		}
     		location_filter_pass = false;
-    	
+
 	    	//read job location(s) and test against filter
 			//if not excluding check if location matches any location filter
 			if ( 	!location_filter_exclude &&
@@ -931,8 +932,8 @@ function greenhouse_jobs(json, jbid){
 			}
 	    	// if (ghjb_d) { console.log('location filter:', location_filter, 'pass=', location_filter_pass); }
      	}
-     	
-     	
+
+
      	//////////
      	// Job Filter  - a single job can only have one title or id
      	//
@@ -944,7 +945,7 @@ function greenhouse_jobs(json, jbid){
      			job_filter_exclude = true;
      		}
      		job_filter_pass = false;
-     	
+
 	     	//read job id and test against filter
 	 		//if not excluding check if job matches any job filter
 	 		if ( 	!job_filter_exclude &&
@@ -958,16 +959,26 @@ function greenhouse_jobs(json, jbid){
 	 					jQuery.inArray( '-'+json.jobs[i].title, job_filter ) == -1 ) {
 	 			job_filter_pass = true;
 	 		}
-	     	// if (ghjb_d) { console.log('job filter:', job_filter, 'pass=', job_filter_pass); }
+
+			if (job_filter_pass) {
+				var interval = setInterval(function() {
+					if (jQuery('.jobs .job_apply').is(':visible')) {
+						clearInterval(interval);
+						jQuery('.jobs .job_apply').trigger('click');
+						jQuery('.jobs .job').hide();
+
+					}
+				}, 100)
+			}
      	}
-     	
+
      	//display val
      	var display = jQuery(jbid + ' .jobs').attr('data-display').split('|');
      	var display_office = null;
      	var display_location = null;
      	var display_department = null;
      	var display_description = null;
-     	
+
      	if ( jQuery.inArray( 'office', display ) >= 0 ) {
      		if ( json.jobs[i].offices.length > 0) {
      			display_office = json.jobs[i].offices[0].name;
@@ -998,14 +1009,14 @@ function greenhouse_jobs(json, jbid){
 
      	//slug
      	json.jobs[i].slug = slugme(json.jobs[i].title);
-     	
+
      	// if filters pass
      	if ( 	department_filter_pass &&
      			job_filter_pass &&
      			office_filter_pass &&
      			location_filter_pass ){
-     	
-     	
+
+
      		if ( group_headline ) {
      			//get this group headline
      			if ( group === 'department' ) {
@@ -1021,7 +1032,7 @@ function greenhouse_jobs(json, jbid){
      				jQuery(jbid + ' .all_jobs .jobs').append( '<h2 class="group_headline">' + current_group + '</h2>' );
      			}
 		    }
-			
+
 			//set up departments value.
 			json.jobs[i].departments_attr = '';
 			for( var j = 0; j < json.jobs[i].departments.length; j++ ) {
@@ -1064,7 +1075,7 @@ function greenhouse_jobs(json, jbid){
 					locations: json.jobs[i].location.name,
 		 		});
 	     		jQuery(jbid + ' .all_jobs .jobs').append(jobshtml);
-	     		
+
 	     		var slidehtml = slide_html_template({
 		 			index: i,
 		 			id: json.jobs[i].id,
@@ -1078,13 +1089,13 @@ function greenhouse_jobs(json, jbid){
 					display_location: display_location,
 	     		});
      			jQuery(jbid + ' .all_jobs').append(slidehtml);
-	     	}	
-		    
+	     	}
+
 	    }
     }
-     
+
     if (board_type == 'cycle' ) {
-     	
+
      	jQuery(jbid + ' .all_jobs').cycle({
      		//fx: fade, fadeout, none, and scrollHorz
      		fx: jQuery(jbid + ' .all_jobs').attr('data-cycle-fx'),
@@ -1093,40 +1104,40 @@ function greenhouse_jobs(json, jbid){
      		autoHeight: 'container',
      		log: false
      	});
-     	
+
     }
-    
+
     //if analytics active check for custom tracking functions
     if ( ghjb_a ) {
 	    //if default google analytics not on page
-	    if (typeof ga != 'function') { 
+	    if (typeof ga != 'function') {
 			if (ghjb_d) { console.log('standard google analytics tracking code not found'); }
 			ghjb_a = false;
-			
+
 			//Google Analytics by Yoast
 			if (typeof __gaTracker == 'function') {
 				if (ghjb_d) { console.log('custom google analytics tracking code found'); }
 				ghjb_a = '__gaTracker';
 			}
-			
+
 	    } else {
 	    	//set to default google analytics object
 	    	ghjb_a = 'ga';
 	    }
 	}
-     
+
 }
 
 function ghjb_analytics(eventCategory, eventAction, eventLabel ){
-	
+
 	if (ghjb_a == 'ga') {
 		ga( 'send', 'event', eventCategory, eventAction, eventLabel );
 	} else if (ghjb_a == '__gaTracker') {
 		__gaTracker( 'send', 'event', eventCategory, eventAction, eventLabel );
 	}
-	
+
 	if (ghjb_d) { console.log('event tracked:', eventCategory, eventAction, eventLabel); }
-	
+
 }
 
 Handlebars.registerHelper('ifeq', function (a, b, options) {
